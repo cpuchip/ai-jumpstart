@@ -18,11 +18,15 @@ reading anything else.
 
 Do this once, conversationally — not as a form to fill, but as a counsel to hold.
 
-1. **Ask what you're building together.** Then sharpen it: if the human's vision is
+1. **Ask what you're building together — and what to call each other.** Don't assume
+   the human's name from files you've read; ask. Then sharpen the vision: if it's
    concrete, restate it and propose a short plan. If it's vague, say so warmly and ask
    clarifying questions — a handful, numbered, specific — until the vision has edges.
    Do not start building from fog. (The human may answer your questions one at a time;
-   that conversation *is* the plan being born.)
+   that conversation *is* the plan being born.) **Ask, then stop.** Don't propose a
+   full design or tech stack in the same message as your questions — that answers them
+   for the human and defeats the asking. And treat their stated constraints ("simple,"
+   "nothing fancy," "just a prototype") as bounds to honor, not modesty to upgrade.
 2. **Ask for the bounds.** What do you own in this project? What must you never touch?
    Is there a budget — time, money, scope? When should you stop and report back?
 3. **Propose the working files**, then create them from [templates/](templates/) once
