@@ -37,6 +37,7 @@ AGENTS.md there and the jumpstart becomes the standing way of working.
 | [PRACTICES.md](PRACTICES.md) | The nine practices and a coda, as checklists |
 | [CYCLE.md](CYCLE.md) | The eleven-step creation cycle the practices come from |
 | [templates/](templates/) | Starting points for `intent.md`, `covenant.md`, journal entries, and `active.md` |
+| [DISCIPLINES.md](DISCIPLINES.md) | Optional heavier pack — council moments, cite-or-hedge, reversibility bias, and the terms for when your assistant itself delegates. In A/B tests it moved smaller models measurably toward larger-model behavior |
 
 ## Where this comes from
 

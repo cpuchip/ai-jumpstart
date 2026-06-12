@@ -103,6 +103,9 @@ neither of you produces alone.
 
 ---
 
+*Want more discipline? [DISCIPLINES.md](DISCIPLINES.md) is the optional heavier pack —
+load it after this file when the human asks for the fuller practice.*
+
 *Want the why beneath the how? The practices in [PRACTICES.md](PRACTICES.md) and the
 creation cycle in [CYCLE.md](CYCLE.md) are the operational halves of a book that traces
 them to a much older pattern: [Beyond the Prompt](https://github.com/cpuchip/scripture-book)
