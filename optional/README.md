@@ -61,6 +61,24 @@ the hook scratch dir to your `.gitignore`:
 Restart Claude Code (or reload) to pick up the statusline; Claude Code may ask you to
 approve the project hooks on next start.
 
+## Example skills
+
+`skills/` holds four **example** Claude Code skills — illustrations of the kind of judgment
+a team encodes once and reuses, so the agent has a proxy to check against instead of
+improvising. They're named in our shop; the pattern matters more than the name, so rename
+freely. Copy any into your project's `.claude/skills/`.
+
+| Skill | The one line |
+|---|---|
+| `dave-rule` | Reversible + intent clear → act and commit; don't ask permission to do the undoable |
+| `stuffy-in-the-loop` | The four-bin rubric for *when* the human's judgment is actually required |
+| `ammon` | Finish what you're handed — the hard moment is the opportunity, not the exit |
+| `ben-test` | Don't claim a principle as a strength you don't actually practice |
+
+```bash
+cp -r optional/skills/* .claude/skills/
+```
+
 ## Tuning
 
 - `reground.py` — `THRESHOLD` (default 50): lower = more frequent re-grounding nudges.
