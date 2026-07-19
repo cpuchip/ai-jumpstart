@@ -63,10 +63,16 @@ approve the project hooks on next start.
 
 ## Example skills
 
-`skills/` holds four **example** Claude Code skills — illustrations of the kind of judgment
+`skills/` holds eight **example** Claude Code skills — illustrations of the kind of judgment
 a team encodes once and reuses, so the agent has a proxy to check against instead of
 improvising. They're named in our shop; the pattern matters more than the name, so rename
 freely. Copy any into your project's `.claude/skills/`.
+
+The first four are *judgment-of-conduct* skills — when to act, when to ask, how to finish,
+how to stay honest. The last four are *heavy-use orchestration* skills — how to run long
+autonomous or delegated work without losing the thread. They lean on each other: foreman
+staffs the work, grindability decides whether it can be turned loose at all, fan-out is the
+parallel shape, and study-it-out keeps every verdict grounded in the artifact.
 
 | Skill | The one line |
 |---|---|
@@ -74,6 +80,10 @@ freely. Copy any into your project's `.claude/skills/`.
 | `stuffy-in-the-loop` | The four-bin rubric for *when* the human's judgment is actually required |
 | `ammon` | Finish what you're handed — the hard moment is the opportunity, not the exit |
 | `ben-test` | Don't claim a principle as a strength you don't actually practice |
+| `foreman` | The boss writes specs and verifies, never implements — staffing work across cheaper seats |
+| `grindability` | The green-light triage: what's the oracle, AND is it grindable, before you turn it loose |
+| `fan-out` | Same operation across N independent units → parallel fresh eyes beat one tiring serial pass |
+| `study-it-out` | Ground every review/verdict in the actual artifact before rendering it — cite the line or it's a guess |
 
 ```bash
 cp -r optional/skills/* .claude/skills/

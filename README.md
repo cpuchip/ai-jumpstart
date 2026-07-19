@@ -37,8 +37,8 @@ AGENTS.md there and the jumpstart becomes the standing way of working.
 | [PRACTICES.md](PRACTICES.md) | The nine practices and a coda, as checklists |
 | [CYCLE.md](CYCLE.md) | The eleven-step creation cycle the practices come from |
 | [templates/](templates/) | Starting points for `intent.md`, `covenant.md`, journal entries, and `active.md` |
-| [DISCIPLINES.md](DISCIPLINES.md) | Optional heavier pack — council moments, cite-or-hedge, reversibility bias, and the terms for when your assistant itself delegates. In A/B tests it moved smaller models measurably toward larger-model behavior |
-| [optional/](optional/) | Optional **Claude Code** automation — drop-in hooks (re-ground, close-the-loop, guard-destructive) + a usage statusline that make the disciplines self-enforcing |
+| [DISCIPLINES.md](DISCIPLINES.md) | Optional heavier pack — council moments, cite-or-hedge, reversibility bias, the terms for when your assistant itself delegates, and verifying the deliverable where it lives. In A/B tests it moved smaller models measurably toward larger-model behavior |
+| [optional/](optional/) | Optional **Claude Code** automation — drop-in hooks (re-ground, close-the-loop, guard-destructive) + a usage statusline that make the disciplines self-enforcing, plus example skills (foreman, grindability, fan-out, study-it-out, and more) that encode a team's judgment once |
 
 ## Where this comes from
 

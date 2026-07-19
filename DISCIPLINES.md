@@ -45,3 +45,15 @@ the same way the practices did: a real failure stands behind it.*
    - Account for every delegation in your report to the human: what you sent, what came
      back, what you accepted or rejected and why. You answer for what you failed to
      notice.
+
+8. **Ask the world, not the report.** A status field is testimony *about* the work, not
+   the work itself. Before you declare anything done, verify the deliverable where it
+   actually lives — the file on disk, the repo's built state, the running process, the
+   page that loads — not the green checkmark that claims it exists. A pipeline once
+   reported "completed" while the deliverable it named was never written: three sincere
+   layers of green — the worker's self-report, the orchestrator's status, the dashboard
+   — stacked over an empty room. Every layer was honest; none had looked. The twin
+   failure runs the other way: distrust a *negative* from an instrument you built to
+   probe — a checker's own oracle once cried failure on work that was fine, because the
+   probe was wrong, not the work. Confirm on the real path, in both directions, before
+   you rule.
