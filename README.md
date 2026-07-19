@@ -38,6 +38,7 @@ AGENTS.md there and the jumpstart becomes the standing way of working.
 | [CYCLE.md](CYCLE.md) | The eleven-step creation cycle the practices come from |
 | [templates/](templates/) | Starting points for `intent.md`, `covenant.md`, journal entries, and `active.md` |
 | [DISCIPLINES.md](DISCIPLINES.md) | Optional heavier pack — council moments, cite-or-hedge, reversibility bias, the terms for when your assistant itself delegates, and verifying the deliverable where it lives. In A/B tests it moved smaller models measurably toward larger-model behavior |
+| [WORKSPACE.md](WORKSPACE.md) | Optional layout guide for when you outgrow one folder — how to hold a durable memory, a reference corpus, and many code projects in one workspace without tangling their git histories. Walls by location, not `.gitignore` |
 | [optional/](optional/) | Optional **Claude Code** automation — drop-in hooks (re-ground, close-the-loop, guard-destructive) + a usage statusline that make the disciplines self-enforcing, plus example skills (foreman, grindability, fan-out, study-it-out, and more) that encode a team's judgment once |
 
 ## Where this comes from
