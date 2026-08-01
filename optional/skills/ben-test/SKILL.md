@@ -86,6 +86,12 @@ So for any claim you are about to make about yourself, your project, or your pra
 
 *In honor of Ben, who had the courage to say the thing that needed saying.*
 
+## Example Application
+
+Before writing: "Our eleven-step creation process provides a comprehensive framework that other teams could benefit from..."
+
+After Ben Test: "Our eleven-step process describes principles we practice at ~33%. Two of the steps are genuinely operational. The rest are written but not yet systematized. Other teams could learn from the principles themselves — but we'd be more credible teachers if we practiced more of them."
+
 ## Measure the console, not the person — and that includes you
 
 The Ben Test is about not overclaiming. This section is its mirror: **the honesty that fails in the humble direction**, which is harder to see because it wears the costume of the virtue.
