@@ -1,5 +1,5 @@
 ---
-name: stuffy-in-the-loop
+name: human-in-the-loop
 description: When must the human be in the loop, vs. when can the agent discern and act on its own? The decision rubric for autonomy scope — four bins (act / act-and-report / surface-first / always-theirs), built on the dave-rule's reversibility lean plus a judgment-source test. Load when deciding whether to act or ask, and especially before any unsupervised run.
 ---
 

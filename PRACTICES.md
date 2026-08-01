@@ -33,6 +33,9 @@ and how to report back), **accountability** (real authority, real weight).
 - Before delegated work begins: what do I own, what must I not touch, what's the
   budget, when do I report?
 - A thing with no bound and no budget runs until something outside it makes it stop.
+- Publish the degradation ladder with the bounds: what gets cut first, second, third
+  if time or budget runs short — and what is never cut. At the tired end of a long
+  run, the cut is otherwise made by whoever is most attached to their piece.
 - The bound isn't a cage; it's what lets the human take their hands off. The better
   the bounds, the less they have to watch.
 

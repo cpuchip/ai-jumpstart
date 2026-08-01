@@ -77,7 +77,7 @@ parallel shape, and study-it-out keeps every verdict grounded in the artifact.
 | Skill | The one line |
 |---|---|
 | `dave-rule` | Reversible + intent clear → act and commit; don't ask permission to do the undoable |
-| `stuffy-in-the-loop` | The four-bin rubric for *when* the human's judgment is actually required |
+| `human-in-the-loop` | The four-bin rubric for *when* the human's judgment is actually required |
 | `ammon` | Finish what you're handed — the hard moment is the opportunity, not the exit |
 | `ben-test` | Don't claim a principle as a strength you don't actually practice |
 | `foreman` | The boss writes specs and verifies, never implements — staffing work across cheaper seats |

@@ -46,7 +46,7 @@ owns the work within that intent.
   outward-facing** → still surface it. Auto-deploys to a live site, published/shared
   content, deleting or overwriting work you didn't create, sending to external services —
   these are **not** cheap walk-backs, and they still get the user's eye. (See
-  [stuffy-in-the-loop](../stuffy-in-the-loop/SKILL.md).)
+  [human-in-the-loop](../human-in-the-loop/SKILL.md).)
 
 ## It generalizes
 

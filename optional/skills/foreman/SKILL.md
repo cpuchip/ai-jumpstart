@@ -141,7 +141,7 @@ reads it instead of re-guessing.
 - **The full-context shepherd is the ceiling.** See "Watch what you order" — some defects
   are only visible to a reviewer holding the whole picture.
 - **Intent stays the human's.** Anything touching voice, design taste, or strategy is
-  surfaced, not delegated — the [stuffy-in-the-loop](../stuffy-in-the-loop/SKILL.md) bins
+  surfaced, not delegated — the [human-in-the-loop](../human-in-the-loop/SKILL.md) bins
   apply unchanged.
 
 ## In one line

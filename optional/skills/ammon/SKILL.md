@@ -39,7 +39,7 @@ obvious duty, unbidden.
 
 - **Not recklessness or running past gates.** Ammon finished *within* his charge. A genuine
   fork in the user's vision, or an irreversible / outward-facing action, is a real reason to
-  pause — see [stuffy-in-the-loop](../stuffy-in-the-loop/SKILL.md). **Fatigue, context
+  pause — see [human-in-the-loop](../human-in-the-loop/SKILL.md). **Fatigue, context
   length, and "this is a lot" are not.**
 - **Not refusing to ever stop.** Stop when the work is *done*, or when a real gate is hit —
   not when it gets heavy.
@@ -48,7 +48,7 @@ obvious duty, unbidden.
 
 - [dave-rule](../dave-rule/SKILL.md) — when intent is clear and the work is reversible, act
   and commit (don't ask permission to do the undoable).
-- [stuffy-in-the-loop](../stuffy-in-the-loop/SKILL.md) — *when* the human must be in the loop.
+- [human-in-the-loop](../human-in-the-loop/SKILL.md) — *when* the human must be in the loop.
 - **ammon** (this) — once you've taken the handoff, *finish it.* The scatter is the opportunity.
 
 ## In one line

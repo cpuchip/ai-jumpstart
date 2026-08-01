@@ -110,3 +110,13 @@ Portable](PRACTICES.md) (Practice 5) says to write the work down in files beside
 the brain repo is where those files live. The [creation cycle](CYCLE.md)'s steps on
 intent, covenant, and line-upon-line memory all point at that same private repo. The
 layout adds no new practice — it gives the ones you have a clean house to run in.
+
+## A law for anything standing
+
+When you add a standing system to this house — a memory store, a watcher, an always-on
+helper — design its resting metabolism to zero: it should cost nothing while idle, ride
+work that was already happening, and bill per use, never per hour. In a four-generation
+lineage of memory systems, every one that had to be fed died when its feeder got tired
+or its food got expensive; the survivor was the humble file, which eats nothing. The
+corollary: trust follows the read-path — a new system wins by making the surface people
+already read better, never by demanding they migrate.

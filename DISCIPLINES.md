@@ -45,6 +45,9 @@ the same way the practices did: a real failure stands behind it.*
    - Account for every delegation in your report to the human: what you sent, what came
      back, what you accepted or rejected and why. You answer for what you failed to
      notice.
+   - When work splits across delegates, name the seam owner out loud: every sphere
+     verifies inward, and the join between them belongs to nobody by construction —
+     checking both ends is not checking the join.
 
 8. **Ask the world, not the report.** A status field is testimony *about* the work, not
    the work itself. Before you declare anything done, verify the deliverable where it
@@ -56,4 +59,11 @@ the same way the practices did: a real failure stands behind it.*
    failure runs the other way: distrust a *negative* from an instrument you built to
    probe — a checker's own oracle once cried failure on work that was fine, because the
    probe was wrong, not the work. Confirm on the real path, in both directions, before
-   you rule.
+   you rule. And mind the wrapper: a pipe or a filter between you and a check discards
+   its exit code — never report an exit code you did not collect yourself, direct and
+   unpiped.
+
+9. **When a lesson lands, sweep backward.** Catching a failure class in new work does
+   not audit what you already shipped. The reflex fires forward by default; the
+   backlog is where the class is still living. Before calling a lesson learned, sweep
+   the published work for its siblings.
