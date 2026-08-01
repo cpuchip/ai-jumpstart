@@ -60,7 +60,7 @@ def main():
                 t = f"{dt // 3600}h{(dt % 3600) // 60}m"
             else:
                 t = f"{dt // 60}m"
-            s += f" ↻{t}"
+            s += f" ↻ {t}"
         parts.append(s)
 
     print(" · ".join(parts))
