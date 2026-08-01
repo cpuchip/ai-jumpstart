@@ -2,7 +2,8 @@
 """Claude Code status line: model, context-window bar, and 5h/7d usage gauges.
 
 Reads the statusline JSON on stdin (code.claude.com/docs/en/statusline).
-Prints one line:  [Model] <bar> NN% ctx · 5h NN% · 7d NN%
+Prints one line:  [Model] <bar> NN% ctx · 5h NN% ↻1h12m · 7d NN% ↻3d4h
+(↻ = time until that rate-limit window resets, from rate_limits.*.resets_at)
 Context bar color: green <50%, yellow 50-79%, red >=80%.
 
 Drop-in for the ai-jumpstart workflow. Install globally (~/.claude/statusline.py)
@@ -10,6 +11,7 @@ so the gauge shows in every project — see optional/README.md.
 """
 import json
 import sys
+import time
 
 
 def main():
@@ -42,10 +44,24 @@ def main():
         parts.append(f"{color}{bar} {p}% ctx\033[0m")
 
     rl = d.get("rate_limits") or {}
+    now = time.time()
     for key, label in (("five_hour", "5h"), ("seven_day", "7d")):
-        u = (rl.get(key) or {}).get("used_percentage")
-        if u is not None:
-            parts.append(f"{label} {int(u)}%")
+        w = rl.get(key) or {}
+        u = w.get("used_percentage")
+        if u is None:
+            continue
+        s = f"{label} {int(u)}%"
+        r = w.get("resets_at")  # unix epoch seconds; independently absent
+        if r:
+            dt = max(0, int(r - now))
+            if dt >= 86400:
+                t = f"{dt // 86400}d{(dt % 86400) // 3600}h"
+            elif dt >= 3600:
+                t = f"{dt // 3600}h{(dt % 3600) // 60}m"
+            else:
+                t = f"{dt // 60}m"
+            s += f" ↻{t}"
+        parts.append(s)
 
     print(" · ".join(parts))
 
