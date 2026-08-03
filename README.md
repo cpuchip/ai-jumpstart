@@ -5,6 +5,11 @@ disciplined way of working with you.** Counsel before building, bounds before
 delegation, verification before assertion, a journal before closing. Works with any
 capable model: Claude, GPT, Gemini, or whatever comes next.
 
+> **Sibling kit:** [working-with-ai](https://github.com/cpuchip/working-with-ai)
+> is the full Claude-Code-native version of this discipline — forty-seven skills,
+> agents, and a bilateral covenant, installable as a plugin. This repo is the
+> on-ramp; that one is the toolshed.
+
 ## Quick start
 
 1. Get this kit next to your project (clone it, or copy the files in):
