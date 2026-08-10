@@ -17,6 +17,13 @@ optional and independent — take what helps, skip the rest.
 | `hooks/close_loop.py` | Stop | "Close the loop" — if you yield with uncommitted work, write the journal + update `active.md` first |
 | `hooks/guard_destructive.py` | UserPromptSubmit | "Reversibility bias" (DISCIPLINES #4) — flag destructive language for per-instance confirmation |
 
+**Skills** live in `skills/` — each a pattern proven in use, written to be
+renamed and adapted. The newest, [`nightly-dream`](skills/nightly-dream/), is
+the distillation loop: a deterministic miner over the day's transcripts plus a
+judgment pass that turns recurring friction into durable memory. Read its
+[SETUP.md](skills/nightly-dream/SETUP.md) — especially the grants section —
+with your human before the first scheduled night.
+
 All three hooks are **fail-safe**: they never raise and never block the tool pipeline. They
 require `python3` on `PATH`.
 
