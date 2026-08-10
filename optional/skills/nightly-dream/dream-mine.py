@@ -46,6 +46,36 @@ from pathlib import Path
 
 PROJECTS = Path.home() / ".claude" / "projects"
 
+# Harness-stamped denial kinds (event-level `toolDenialKind`) — the
+# deterministic marker for "a human or a permission rule said no." Phrase
+# matching is only the fallback for older transcripts without the field.
+# OS errors that merely CONTAIN "permission denied" (SSH publickey, EACCES,
+# file perms) are tool errors, not denials.
+USER_DENIAL_KINDS = {"user-rejected", "permission-rule", "automode-blocked",
+                     "automode-unavailable", "automode-parsing-error"}
+USER_DENIAL_PHRASES = ("user doesn't want", "user rejected", "user denied")
+
+# The dream cron's own prompt sentinel. Without this the miner mines the
+# dream lane's own nightly sessions — measured half the in-window errors one
+# night. Matched against the first lines of each file, where the cron prompt
+# always lands. Adjust to your cron's prompt if you changed it.
+SELF_MARKER = "You are the scheduled nightly dream"
+
+
+def is_self_session(fp: Path, scan_lines: int = 40) -> bool:
+    """True if this transcript is a nightly-dream session (cron sentinel in
+    the file head — covers fresh sessions and post-compaction summaries)."""
+    try:
+        with fp.open(encoding="utf-8", errors="replace") as fh:
+            for i, line in enumerate(fh):
+                if i >= scan_lines:
+                    break
+                if SELF_MARKER in line:
+                    return True
+    except OSError:
+        pass
+    return False
+
 
 def norm_signature(text: str) -> str:
     """First meaningful line, with volatile tokens collapsed.
@@ -94,7 +124,7 @@ def parse_ts(ev) -> float:
         return 0.0
 
 
-def mine(hours: float):
+def mine(hours: float, include_self: bool = False):
     cutoff = time.time() - hours * 3600
     errors = defaultdict(lambda: {"count": 0, "tools": set(), "sessions": set(), "samples": []})
     denials = []
@@ -102,12 +132,16 @@ def mine(hours: float):
     retry_clusters = defaultdict(set)   # (session, signature) -> occurrence count via list
     retry_counts = defaultdict(int)
     files_read = 0
+    self_skipped = 0
 
     for proj in sorted(PROJECTS.iterdir()) if PROJECTS.is_dir() else []:
         if not proj.is_dir():
             continue
         for fp in proj.glob("*.jsonl"):
             if fp.stat().st_mtime < cutoff:
+                continue
+            if not include_self and is_self_session(fp):
+                self_skipped += 1
                 continue
             files_read += 1
             session = f"{proj.name}/{fp.name}"
@@ -130,6 +164,7 @@ def mine(hours: float):
                             continue
                     except json.JSONDecodeError:
                         continue
+                    denial_kind = d.get("toolDenialKind")
                     msg = d.get("message")
                     if not isinstance(msg, dict):
                         continue
@@ -152,8 +187,10 @@ def mine(hours: float):
                             name, inp = tool_use.get(c.get("tool_use_id"), ("?", ""))
                             if c.get("is_error"):
                                 low = text.lower()
-                                if "user doesn't want" in low or "permission" in low and "denied" in low:
+                                if (denial_kind in USER_DENIAL_KINDS
+                                        or any(p in low for p in USER_DENIAL_PHRASES)):
                                     denials.append({"session": session, "tool": name,
+                                                    "kind": denial_kind or "phrase-match",
                                                     "snippet": text[:160]})
                                     continue
                                 sig = norm_signature(text)
@@ -179,6 +216,7 @@ def mine(hours: float):
     return {
         "window_hours": hours,
         "files_scanned": files_read,
+        "self_sessions_skipped": self_skipped,
         "total_errors": sum(c["count"] for c in clusters),
         "clusters": clusters,
         "denials": denials,
@@ -195,17 +233,25 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--hours", type=float, default=24)
     ap.add_argument("--json", type=str, default="")
+    ap.add_argument("--include-self", action="store_true",
+                    help="also mine the dream lane's own nightly sessions "
+                         "(excluded by default — use to audit the dream itself)")
     args = ap.parse_args()
 
-    digest = mine(args.hours)
+    digest = mine(args.hours, include_self=args.include_self)
     if args.json:
         Path(args.json).write_text(
             json.dumps(digest, indent=1, ensure_ascii=False), encoding="utf-8")
 
+    self_note = (f" ({digest['self_sessions_skipped']} dream-lane session(s) "
+                 f"excluded — --include-self to audit them)"
+                 if digest["self_sessions_skipped"] else "")
     print(f"dream-mine: {digest['files_scanned']} session file(s) in the last "
-          f"{args.hours:g}h — {digest['total_errors']} tool error(s) in "
+          f"{args.hours:g}h{self_note} — {digest['total_errors']} tool error(s) in "
           f"{len(digest['clusters'])} cluster(s), {len(digest['denials'])} denial(s), "
           f"{digest['interrupts']} interrupt(s), {len(digest['retry_loops'])} retry loop(s)")
+    for dn in digest["denials"][:8]:
+        print(f"  DENIAL [{dn['kind']}|{dn['tool']}] {dn['snippet'][:110]}")
     for c in digest["clusters"][:20]:
         print(f"\n[{c['count']}x | {c['sessions']} session(s) | {','.join(c['tools'])}] {c['signature']}")
         s = c["samples"][0]
