@@ -21,11 +21,12 @@ needs context, and proposes evidence-cited changes. Karpathy's "dreaming,"
 made concrete: deterministic evidence first, judgment second, a human
 before anything durable changes.
 
-KNOWN DEFECT (found 2026-08-08, fix pending): the window filter selects
-transcript FILES by mtime and then mines their whole history, so a long-lived
-session re-reports old errors as if they were tonight's. Measured once at 221
-reported vs 5 genuinely in-window. Until that is fixed, treat counts as an
-upper bound and verify a cluster's timestamps before acting on it.
+WINDOW SEMANTICS (defect found 2026-08-08, FIXED 2026-08-10): events are
+gated on their OWN timestamps, not the file's mtime — mtime survives only as
+a cheap file prefilter. The original bug (mine whole history of any recently
+touched file) was measured at 97.7% stale counts, was independently
+reproduced on a second machine, and was patched there first. If you vendored
+an older copy of this file, take this version.
 
 Why signatures normalize paths/numbers/uuids: an error that names a different
 file each time is still the same wound. Clustering by raw text hides the
@@ -79,6 +80,20 @@ def content_text(c) -> str:
     return str(c)
 
 
+def parse_ts(ev) -> float:
+    """Epoch seconds from a transcript event's ISO timestamp; 0 if absent.
+    (Two machines in the origin fleet independently grew the same window
+    bug; the constrained test-bench box patched it first — this is its fix.)"""
+    ts = ev.get("timestamp")
+    if not ts:
+        return 0.0
+    try:
+        from datetime import datetime
+        return datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp()
+    except (ValueError, AttributeError):
+        return 0.0
+
+
 def mine(hours: float):
     cutoff = time.time() - hours * 3600
     errors = defaultdict(lambda: {"count": 0, "tools": set(), "sessions": set(), "samples": []})
@@ -105,6 +120,14 @@ def mine(hours: float):
                 for line in fh:
                     try:
                         d = json.loads(line)
+                        # Event-level window gate (the miner-v2 fix): a
+                        # long-lived session file's mtime is always "now",
+                        # which re-entered the whole multi-day history every
+                        # night — measured 97.7% stale (221 claimed / 5 real).
+                        # The mtime check above stays as a cheap file PREfilter.
+                        _ts = parse_ts(d)
+                        if _ts and _ts < cutoff:
+                            continue
                     except json.JSONDecodeError:
                         continue
                     msg = d.get("message")
