@@ -6,9 +6,19 @@ delegation, verification before assertion, a journal before closing. Works with 
 capable model: Claude, GPT, Gemini, or whatever comes next.
 
 > **Sibling kit:** [working-with-ai](https://github.com/cpuchip/working-with-ai)
-> is the full Claude-Code-native version of this discipline — forty-seven skills,
+> is the full Claude-Code-native version of this discipline — fifty skills,
 > agents, and a bilateral covenant, installable as a plugin. This repo is the
 > on-ramp; that one is the toolshed.
+>
+> **Working with more than one machine, or more than one assistant?**
+> [multiplayer-ai](https://github.com/cpuchip/multiplayer-ai) is the dance
+> manual for a fleet: room norms, pairing, shared memory, and what agreement
+> between assistants is actually worth.
+
+**Governing files:** [GOVERNANCE.md](GOVERNANCE.md) explains the four documents
+that govern the relationship — intent, covenant, identity, principles — what
+each is for, where a given rule belongs, and why you should expect them to
+diverge across machines rather than syncing them.
 
 ## Quick start
 
