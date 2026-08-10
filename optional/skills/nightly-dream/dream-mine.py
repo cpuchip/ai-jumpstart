@@ -53,7 +53,17 @@ PROJECTS = Path.home() / ".claude" / "projects"
 # file perms) are tool errors, not denials.
 USER_DENIAL_KINDS = {"user-rejected", "permission-rule", "automode-blocked",
                      "automode-unavailable", "automode-parsing-error"}
-USER_DENIAL_PHRASES = ("user doesn't want", "user rejected", "user denied")
+# The phrase fallback (for transcripts predating the field) matches the
+# harness's own closed set of denial strings, POSITIVELY — machine refusals
+# are an open set (every utility phrases its own "permission denied"), human/
+# harness denials are closed (the harness writes them). Measured 2026-08-10:
+# the first three (historical) matched 0 of 84 field-stamped denials on a
+# current CLI; the rest are the strings the harness actually writes now.
+USER_DENIAL_PHRASES = ("user doesn't want", "user rejected", "user denied",
+                       "claude requested permissions to",
+                       "the following part requires approval",
+                       "for security, claude code",
+                       "cannot be statically analyzed")
 
 # The dream cron's own prompt sentinel. Without this the miner mines the
 # dream lane's own nightly sessions — measured half the in-window errors one
@@ -252,6 +262,13 @@ def main() -> int:
           f"{digest['interrupts']} interrupt(s), {len(digest['retry_loops'])} retry loop(s)")
     for dn in digest["denials"][:8]:
         print(f"  DENIAL [{dn['kind']}|{dn['tool']}] {dn['snippet'][:110]}")
+    if not digest["denials"]:
+        # On --dangerously-skip-permissions seats a human denial CANNOT
+        # occur, so 0 means N/A there, not "never stopped." This instrument
+        # can't tell the modes apart; say so instead of letting 0 read as
+        # an all-clear.
+        print("  (0 denials — on skip-permissions seats this is N/A, not "
+              "'the human never had to stop me')")
     for c in digest["clusters"][:20]:
         print(f"\n[{c['count']}x | {c['sessions']} session(s) | {','.join(c['tools'])}] {c['signature']}")
         s = c["samples"][0]
