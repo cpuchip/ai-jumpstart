@@ -12,7 +12,7 @@ optional and independent — take what helps, skip the rest.
 
 | File | Hook / type | The discipline it automates |
 |---|---|---|
-| `statusline.py` | statusLine | Situational awareness — model, context %, and the 5h / 7d usage gauges, always in view |
+| `statusline.py` | statusLine | Situational awareness: model, context %, the prompt-cache clock (warm until when, hit ratio, what a cold restart re-caches), and every usage gauge the harness sends (5h / 7d today), always in view |
 | `hooks/reground.py` | PostToolUse | "Keep the watch whole" (DISCIPLINES #6) — every 50 tool uses, a nudge to re-read your memory |
 | `hooks/close_loop.py` | Stop | "Close the loop" — if you yield with uncommitted work, write the journal + update `active.md` first |
 | `hooks/guard_destructive.py` | UserPromptSubmit | "Reversibility bias" (DISCIPLINES #4) — flag destructive language for per-instance confirmation |
@@ -46,10 +46,18 @@ Add to `~/.claude/settings.json` (merge — don't clobber existing keys):
 {
   "statusLine": {
     "type": "command",
-    "command": "python3 \"$HOME/.claude/statusline.py\""
+    "command": "python3 \"$HOME/.claude/statusline.py\"",
+    "refreshInterval": 60
   }
 }
 ```
+
+`refreshInterval` (seconds) re-runs the line while the session idles, so the cache clock's
+minutes tick down between turns; without it the absolute expiry time is still right, only
+the countdown goes stale. The clock reads Claude Code's own `prompt_cache` fields (2.1.x and
+later); on an older build it falls back to the transcript's last write plus a one-hour TTL and
+marks the figure with `~`. Set `CLAUDE_STATUSLINE_DUMP=1` to write the raw input to
+`<temp>/claude-statusline-<session_id>.json` when you want to see the fields for yourself.
 
 ### 2. Hooks (project)
 
