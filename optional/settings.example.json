@@ -32,6 +32,17 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/session-cost.py\" --hook",
+            "timeout": 20
+          }
+        ]
+      }
     ]
   }
 }

@@ -3,7 +3,7 @@
 
 Reads the statusline JSON on stdin (code.claude.com/docs/en/statusline).
 Prints one line:
-  [Model] <bar> NN% ctx · 🔥 →16:42 (47m) hit 92% · 5h NN% ↻1h12m · 7d NN% ↻3d4h
+  [Model] <bar> NN% ctx · $12.40 (+$0.23) · 98I/6.2kW/1.9MR/5.6kO 4t · 🔥 →16:42 (47m) hit 92% · 5h NN% ↻1h12m · 7d NN% ↻3d4h
 (↻ = time until that rate-limit window resets, from rate_limits.*.resets_at)
 Context bar color: green <50%, yellow 50-79%, red >=80%.
 
@@ -13,6 +13,14 @@ restart would re-cache. The absolute expiry time is the number to trust while th
 idle; the minutes-left figure ticks only if you set `refreshInterval` in the statusLine
 settings (see optional/README.md). On an older build without `prompt_cache`, the transcript's
 last write plus CLAUDE_CACHE_TTL_MIN (default 60) stands in, marked with "~".
+
+The dollar figure is the harness's running session cost (`cost.total_cost_usd`); the (+$) is what
+the CURRENT exchange has cost so far. The I/W/R/O block is that exchange's tokens: uncached input,
+cache write, cache read, output, and Nt is its API round trips. Both reset at each real user prompt,
+so the number that holds while you read an answer is what that answer cost. They come from the
+session transcript (`transcript_path`), read incrementally: only the bytes appended since the last
+refresh are parsed, state lives in <temp>/claude-usage-<session_id>.json, and the first pass is
+windowed to the harness's own duration so a resumed transcript's history stays out.
 
 Every bucket in `rate_limits` is rendered, not just the two known ones, so a new window shows
 up the day the harness sends it. Set CLAUDE_STATUSLINE_DUMP=1 to write the raw input to
@@ -57,6 +65,91 @@ def label_for(key):
     if key in LABELS:
         return LABELS[key]
     return key.replace("seven_day", "7d").replace("five_hour", "5h").replace("_", " ")[:14]
+
+
+def fmt_tok(n):
+    n = int(n)
+    if n >= 10_000_000:
+        return f"{n / 1e6:.0f}M"
+    if n >= 1_000_000:
+        return f"{n / 1e6:.1f}M"
+    if n >= 10_000:
+        return f"{n / 1e3:.0f}k"
+    if n >= 1_000:
+        return f"{n / 1e3:.1f}k"
+    return str(n)
+
+
+def is_prompt(rec):
+    """A real user prompt: string content, or a text block. Tool results and harness records are not."""
+    if rec.get("type") != "user" or rec.get("isMeta"):
+        return False
+    c = (rec.get("message") or {}).get("content")
+    return isinstance(c, str) or (isinstance(c, list) and bool(c) and isinstance(c[0], dict) and c[0].get("type") == "text")
+
+
+def usage_tally(d, usd):
+    """Tokens and cost delta of the current exchange, from the transcript, read incrementally."""
+    tp, sid = d.get("transcript_path"), str(d.get("session_id") or "")[:36]
+    if not tp or not sid:
+        return None
+    try:
+        size = os.path.getsize(tp)
+    except OSError:
+        return None
+    path = os.path.join(tempfile.gettempdir(), f"claude-usage-{sid}.json")
+    fresh = {"offset": 0, "ids": [], "ex": {"inp": 0, "cw": 0, "cr": 0, "out": 0, "cost0": None, "turns": 0}}
+    try:
+        with open(path, encoding="utf-8") as f:
+            t = json.load(f)
+        if t.get("offset", 0) > size or "ex" not in t:
+            raise ValueError("reset")
+        since = None
+    except Exception:
+        t = fresh
+        dur = (d.get("cost") or {}).get("total_duration_ms")
+        since = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(time.time() - dur / 1000)) if dur else None
+    if size > t["offset"]:
+        try:
+            with open(tp, "rb") as f:
+                f.seek(t["offset"])
+                data = f.read()
+        except OSError:
+            return None
+        end = data.rfind(b"\n")
+        if end >= 0:
+            ids = set(t["ids"])
+            for line in data[:end].split(b"\n"):
+                try:
+                    rec = json.loads(line)
+                except ValueError:
+                    continue
+                if since and (rec.get("timestamp") or "") < since:
+                    continue
+                if is_prompt(rec):
+                    t["ex"] = {"inp": 0, "cw": 0, "cr": 0, "out": 0, "cost0": usd, "turns": 0}
+                    continue
+                msg = rec.get("message") or {}
+                u, mid = msg.get("usage"), msg.get("id")
+                if not u or not mid or mid in ids:
+                    continue
+                ids.add(mid)
+                t["ids"] = (t["ids"] + [mid])[-300:]
+                ex = t["ex"]
+                ex["turns"] += 1
+                ex["inp"] += u.get("input_tokens", 0)
+                ex["cw"] += u.get("cache_creation_input_tokens", 0)
+                ex["cr"] += u.get("cache_read_input_tokens", 0)
+                ex["out"] += u.get("output_tokens", 0)
+            t["offset"] += end + 1
+            try:
+                with open(path, "w", encoding="utf-8") as f:
+                    json.dump(t, f)
+            except OSError:
+                pass
+    ex = t["ex"]
+    delta = f" (+${usd - ex['cost0']:.2f})" if usd is not None and ex.get("cost0") is not None and usd >= ex["cost0"] else ""
+    return delta, f"{DIM}{fmt_tok(ex['inp'])}I/{fmt_tok(ex['cw'])}W/{fmt_tok(ex['cr'])}R/{fmt_tok(ex['out'])}O {ex['turns']}t{RESET}"
 
 
 def clock_text(expires, now, hit=None, recache=None, approx=False):
@@ -138,6 +231,13 @@ def main():
         bar = "▓" * (p // 10) + "░" * (10 - p // 10)
         color = GREEN if p < 50 else YELLOW if p < 80 else RED
         parts.append(f"{color}{bar} {p}% ctx{RESET}")
+
+    usd = (d.get("cost") or {}).get("total_cost_usd")
+    tally = usage_tally(d, usd)
+    if usd is not None:
+        parts.append(f"${float(usd):.2f}" + (tally[0] if tally else ""))
+    if tally:
+        parts.append(tally[1])
 
     now = time.time()
     clock = cache_clock(d, now)
