@@ -18,14 +18,14 @@ Usage:
                                           # line to <temp>/claude-session-costs.log. SessionEnd
                                           # output is not displayed, so the file is the record.
 """
-import glob, json, os, sys, tempfile, time
+import glob, json, os, re, sys, tempfile, time
 
 ROOT = None
 CACHE = tempfile.gettempdir()
 
 
 def newest_transcript():
-    slug = "-" + os.getcwd().replace("/", "-").lstrip("-")
+    slug = re.sub(r"[\\/:]", "-", os.getcwd())  # the harness maps / \ : to -: "-home-x-proj" on Linux, "C--Users-x-proj" on Windows
     files = glob.glob(os.path.expanduser(f"~/.claude/projects/{slug}/*.jsonl"))
     return max(files, key=os.path.getmtime) if files else None
 
