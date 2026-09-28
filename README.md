@@ -20,17 +20,51 @@ that govern the relationship — intent, covenant, identity, principles — what
 each is for, where a given rule belongs, and why you should expect them to
 diverge across machines rather than syncing them.
 
+## Where to put it (read this before you clone)
+
+These kits carry instruction files (`AGENTS.md`, `CLAUDE.md`) and hooks that an AI tool
+loads by proximity: whatever folder you run the tool in, and the folders under it, become
+its instructions. So **do not clone this repo, or its siblings, into the folder you work
+in.** Cloned there, the kit's files take over your project's instructions and its hooks
+run against a layout they were not written for; the result is a session that behaves
+strangely from the first prompt. That has happened to a friend of ours, and moving the
+folders was the whole fix.
+
+Make a workspace folder with no git repository at its root, and clone the kits into an
+`external_context/` folder inside it, beside your own projects:
+
+```
+workspace/                    <- untracked root: no .git here
+  external_context/           <- reference kits, cloned; nothing of yours lives here
+    ai-jumpstart/
+    working-with-ai/          (optional, the Claude Code plugin)
+    multiplayer-ai/           (optional, for more than one machine or assistant)
+  my-project/                 <- your code, its own repository
+  private-workspace/          <- optional: your memory and instructions, its own PRIVATE repo
+```
+
+```
+mkdir -p workspace/external_context && cd workspace/external_context
+git clone https://github.com/cpuchip/ai-jumpstart.git
+git clone https://github.com/cpuchip/working-with-ai.git      # optional
+git clone https://github.com/cpuchip/multiplayer-ai.git       # optional
+cd ..
+```
+
+Run your AI tool from `workspace/` (or from `workspace/my-project/`), never from inside
+`external_context/`. [WORKSPACE.md](WORKSPACE.md) explains the layout in full: one root,
+walls by location rather than by `.gitignore`, and how to migrate an existing folder into
+it. A multi-machine version of the same layout (each box its own facts, each assistant
+its own charter) is being written and will land here when it has been lived.
+
 ## Quick start
 
-1. Get this kit next to your project (clone it, or copy the files in):
-
-   ```
-   git clone https://github.com/cpuchip/ai-jumpstart.git
-   ```
+1. With the kit cloned under `workspace/external_context/` as above, open your AI tool in
+   `workspace/`.
 
 2. Tell your AI assistant:
 
-   > Read AGENTS.md in the ai-jumpstart folder and follow it. This is our first
+   > Read external_context/ai-jumpstart/AGENTS.md and follow it. This is our first
    > session.
 
 3. That's it. The assistant will ask you what you're building, sharpen the vision with
