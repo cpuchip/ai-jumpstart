@@ -67,3 +67,15 @@ the same way the practices did: a real failure stands behind it.*
    not audit what you already shipped. The reflex fires forward by default; the
    backlog is where the class is still living. Before calling a lesson learned, sweep
    the published work for its siblings.
+
+10. **A fresh reader before the build.** The agent that drafted a plan has been agreeing with
+    you for the whole conversation, so its review of that plan is one mind checking itself.
+    Before building from any plan that would cost real time if wrong, hand it to a reader
+    that never saw the conversation (a new session, a subagent started cold, a different
+    model) with only the document and the code it names. Ask two things first: is there a
+    simpler way, or does the project already do this; and can you say back, in your own
+    words, what this proposes? A wrong paraphrase is a finding. Google's Elephant-Goldfish
+    Model ([github.com/google/elephant-goldfish-model](https://github.com/google/elephant-goldfish-model))
+    is a full procedure for this; the working-with-ai pack carries a shorter one as
+    `goldfish-review`. Their rule is the one to keep: "a review in the same context is not a
+    Goldfish review."

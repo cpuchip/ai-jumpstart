@@ -24,6 +24,9 @@ you find it.
 - A plan is a map, not a debt. Counsel together until you can see the way; then let
   the map serve the walking. Revise it when the ground disagrees — and never let the
   plan's size become the reason nothing starts.
+- Before building from the plan, let a reader that was not in the conversation read it
+  cold: a fresh session or a subagent handed only the document. If it cannot say back what
+  the plan proposes, the plan is not done. (The fuller procedure: DISCIPLINES.md, item 10.)
 
 ## 3 · Set the Bounds, Then Let Go
 
